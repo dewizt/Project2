@@ -15,8 +15,7 @@ namespace Project2
         public Form1()
         {
             InitializeComponent();
-            AddToMassive();
-            Thread thread = new Thread(ReverseStatus);
+            Thread thread = new Thread(AddToMassive);
             thread.Start();           
         }
         public void AddToMassive()
@@ -36,12 +35,30 @@ namespace Project2
                 MySqlDataReader read = command.ExecuteReader();
 
                 int i = 0;
-                while (read.Read() & i < 5)
+                while (read.Read())
                 {
                     arrayID[i] = read[0].ToString();
                     arrayName[i] = read[1].ToString();
                     status[i] = read[2].ToString();
+                    if(status.Length != 0)
+                    {
+                        if (status[i] == "0")
+                        {
+                            status[i] = "1 изменено";
+                            listBox4.Items.Add(DateTime.Now + " произвели замену '0' на " + status[i] + " [REVERSESTATUS]");
+                        }
+                        if (status[i] == "1")
+                        {
+                            status[i] = "0 изменено";
+                            listBox4.Items.Add(DateTime.Now + " произвели замену '1' на " + status[i] + " [REVERSESTATUS]");
+                        }
+                    }
+                    else
+                    {
+                        listBox4.Items.Add(DateTime.Now + " НЕЧЕГО ЗАПОЛНЯТЬ");
+                    }
                     i++;
+                    Thread.Sleep(50);
                 }
                 read.Close();
                 conn.Close();
@@ -50,7 +67,6 @@ namespace Project2
             listBox4.Items.Add(DateTime.Now + " добавили ID в массив [ADDTOMASSIVE]");
             listBox4.Items.Add(DateTime.Now + " добавили NAME в массив [ADDTOMASSIVE]");
             listBox4.Items.Add(DateTime.Now + " добавили STATUS в массив [ADDTOMASSIVE]");
-            Thread.Sleep(5000);
         } // Добавление элементов в массивы
         public void AddToList()
         {
@@ -62,29 +78,7 @@ namespace Project2
             }
             listBox4.Items.Add(DateTime.Now + " добавили элементы в массивы");
         } // Добавление в таблицы
-        public void ReverseStatus()
-        {
-                if (status.Length != 0)
-                {
-                    for (int i = 0; i < status.Length; i++)
-                    {
-                        if (status[i] == "0")
-                        {
-                            status[i] = "1 изменено";
-                            listBox4.Items.Add(DateTime.Now + " произвели замену '0' на " + status[i] + " [REVERSESTATUS]");
-                    }
-                        if (status[i] == "1")
-                        {
-                            status[i] = "0 изменено";
-                            listBox4.Items.Add(DateTime.Now + " произвели замену '1' на " + status[i] + " [REVERSESTATUS]");
-                        }
-                    }
-                }
-                else
-                {
-                    listBox4.Items.Add(DateTime.Now + " НЕЧЕГО ЗАПОЛНЯТЬ");
-                }
-        } // Замена статуса на противоположное значение
+
 
         public void button1_Click(object sender, EventArgs e)
         {
